@@ -10,9 +10,11 @@ export default function Home() {
   const [stats, setStats] = useState<{ memTableSize: number; sstableCount: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
   const fetchStats = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/stats");
+      const res = await fetch(`${API_URL}/api/stats`);
       const data = await res.json();
       setStats(data);
     } catch (error) {
@@ -29,7 +31,7 @@ export default function Home() {
   const handleSet = async () => {
     setLoading(true);
     try {
-      await fetch("http://localhost:8080/api/set", {
+      await fetch(`${API_URL}/api/set`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, value }),
@@ -46,7 +48,7 @@ export default function Home() {
 
   const handleGet = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/api/get?key=${searchKey}`);
+      const res = await fetch(`${API_URL}/api/get?key=${searchKey}`);
       const data = await res.text();
       setSearchResult(data);
     } catch (error) {
